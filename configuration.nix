@@ -1,19 +1,20 @@
-{
-  config, lib, pkgs, inputs, ... }:
+# Edit this configuration file to define what should be installed on
+# your system. Help is available in the configuration.nix(5) man page, on
+# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-  {
-    imports = [ 
+{ config, lib, pkgs, inputs, ... }:
+
+{
+  imports =
+    [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./amdgpu.nix
-      ./appimage.nix
       ./bluetooth.nix
       ./doas.nix
       ./env.nix
-      ./gamemode.nix
+      ./gaming.nix
       ./hyprland.nix
       ./noctalia.nix
-      ./xdg.nix
-      ./zsh.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -21,11 +22,10 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel.
-  # boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Boot settings
-  boot.kernelParams = [ "quiet" ];
+  boot.kernelParams = [ "quiet" "usbcore.autosuspend--1" ];
 
   # CachyOS inspired low latency settings
   boot.kernel.sysctl = {
@@ -50,6 +50,8 @@
   };
 
   networking.hostName = "nixos"; # Define your hostname.
+  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+
 
   # PIPEWIRE & AUDIO
   security.rtkit.enable = true;
@@ -61,42 +63,19 @@
     jack.enable = true;
   };
 
-  # Configure network connections interactively with iwd.
-  networking.networkmanager = {
-    enable = false;
-    #wifi.backend = "iwd";
-  };
-
-  # Az iwd démon explicit engedélyezése
-  networking.wireless.iwd = {
-    enable = true;
-    settings = {
-      General = {
-        EnableNetworkConfiguration = true;
-      };
-      Network = {
-        EnableIPv6 = true;
-      };
-      Settings = {
-        AutoConnect = true;
-      	#Country = "HU";
-      };
-    };
-  };
-
-  networking.wireless.enable = false;
-
   # Set your time zone.
   time.timeZone = "Europe/Budapest";
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
   users.users.gabtai = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    description = "Tomi";
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
-      rofi
-      thunar
+      tree
     ];
   };
 
@@ -115,16 +94,12 @@
     gst_all_1.gst-plugins-bad
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-libav
-    lutris
-    steam
+    linux-firmware
     slurp
     swappy
-    wineWow64Packages.staging
-    winetricks
-    protontricks
-    protonplus
+    xdg-user-dirs
   ];
-  
+
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.amd.updateMicrocode = true;
   nixpkgs.config.allowUnfree = true;
@@ -200,7 +175,7 @@
     };
   };
 
-  system.stateVersion = "26.05";
+  system.stateVersion = "25.05";
 
 }
 

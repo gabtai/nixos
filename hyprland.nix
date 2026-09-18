@@ -4,8 +4,6 @@
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
-    # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-    # portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
   };
 
   services.displayManager.ly.enable = true;
@@ -16,10 +14,13 @@
     hyprcursor
   ];
 
-  # nix.settings = {
-    # substituters = [ "https://hyprland.cachix.org" ];
-    # trusted-public-keys = [
-      # "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-    # ];
-  # };
+  # XDG Portal támogatás (fájlválasztók, sötét mód, általános integráció)
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-hyprland
+      pkgs.xdg-desktop-portal-gtk # GTK fájlválasztó ablakokhoz és témákhoz
+    ];
+    config.common.default = "*";
+  };
 }
