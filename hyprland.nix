@@ -4,6 +4,8 @@
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
   };
 
   services.displayManager.ly.enable = true;
@@ -12,15 +14,10 @@
     foot
     nwg-look
     hyprcursor
+    grim
+    rofi
+    slurp
+    swappy
+    thunar
   ];
-
-  # XDG Portal támogatás (fájlválasztók, sötét mód, általános integráció)
-  xdg.portal = {
-    enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-hyprland
-      pkgs.xdg-desktop-portal-gtk # GTK fájlválasztó ablakokhoz és témákhoz
-    ];
-    config.common.default = "*";
-  };
 }
