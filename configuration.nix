@@ -52,8 +52,6 @@
   networking.hostName = "nixos"; # Define your hostname.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
-
-  # PIPEWIRE & AUDIO
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -63,24 +61,13 @@
     jack.enable = true;
   };
 
-  # Set your time zone.
   time.timeZone = "Europe/Budapest";
-
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
 
   users.users.gabtai = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      tree
-    ];
+    extraGroups = [ "wheel" ];
   };
 
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
     adw-gtk3
     brave-origin
@@ -88,15 +75,12 @@
     ffmpeg
     fastfetch
     git
-    grim
     gst_all_1.gst-plugins-base
     gst_all_1.gst-plugins-good
     gst_all_1.gst-plugins-bad
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-libav
     linux-firmware
-    slurp
-    swappy
     xdg-user-dirs
   ];
 
@@ -112,14 +96,14 @@
 
   fonts.packages = with pkgs; [
     # UI és Dokumentumok (Cikkek, Web, Rofi, Waybar)
-    inter                    # Modern, gyönyörű UI font
-    liberation_ttf           # Microsoft Arial/Times New Roman kompatibilitás
+    inter
+    liberation_ttf
 
     # Terminál & Ikonok (Foot, Neovim, Hyprland)
-    nerd-fonts.jetbrains-mono # Kódolás és fejlesztői ikonok
+    nerd-fonts.jetbrains-mono
 
     # Emojik
-    noto-fonts-color-emoji   # Színes emojik
+    noto-fonts-color-emoji
   ];
 
   # Default fontconfig 
@@ -152,18 +136,21 @@
   nix = {
     settings = {
       auto-optimise-store = true;
-      download-buffer-size = 524288000; # 500 MB letöltési puffer a gyorsabb letöltésekért
+      download-buffer-size = 524288000;
       experimental-features = [ "nix-command" "flakes" ];
+	  trusted-users = ["root" "gabtai"];
 
       substituters = [
         "https://cache.nixos.org"
         "https://noctalia.cachix.org"
-	"https://nyx-cache.chaotic.cx"
+	    "https://nyx-cache.chaotic.cx"
+		"https://hyprland.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-	"nyx-cache.chaotic.cx:dJxTrgMC3V3cFfyIiBQDQorG6k1LsqurH/srpMSq7qk="
+		"nyx-cache.chaotic.cx:dJxTrgMC3V3cFfyIiBQDQorG6k1LsqurH/srpMSq7qk="
+		"hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
     };
 
